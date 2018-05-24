@@ -93,6 +93,8 @@ def gen_batch_function(data_folder, image_shape):
                 gt_bg = gt_bg.reshape(*gt_bg.shape, 1)
                 gt_image = np.concatenate((gt_bg, np.invert(gt_bg)), axis=2)
 
+                image, gt_image = modify_picture(image, gt_image)
+
                 images.append(image)
                 gt_images.append(gt_image)
 
@@ -107,18 +109,22 @@ def modify_picture(image, label):
         image = np.fliplr(image)
         label = np.fliplr(label)
 
+    """
     # rotate
     if np.random.rand() > 0.5:
         max_angle = 5
-        image = scipy.ndimage.interpolation.rotate(image, random.uniform(-max_angle, max_angle))
-        label = scipy.ndimage.interpolation.rotate(label, random.uniform(-max_angle, max_angle))
+        angle = random.uniform(-max_angle, max_angle)
+        image = scipy.ndimage.interpolation.rotate(image, angle)
+        label = scipy.ndimage.interpolation.rotate(label, angle)
 
     # shift
     if np.random.rand() > 0.5:
         max_zoom = 1.3
-        image = scipy.ndimage.interpolation.shift(image, random.uniform(-1, 1))
-        label = scipy.ndimage.interpolation.shift(label, random.uniform(-1, 1))
+        shift = random.uniform(-1, 1);
+        image = scipy.ndimage.interpolation.shift(image, shift)
+        label = scipy.ndimage.interpolation.shift(label, shift)
 
+    """
     return image, label
 
 
